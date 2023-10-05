@@ -24,8 +24,16 @@ object CommandInterpreter {
     }
 
     private fun deadlines(deadlines: MutableList<Deadline>): String {
-         return "**Upcoming Deadlines:**\n" +
-                 deadlines.joinToString("\n----------\n") { "**${it.name}** - ${it.date.dayOfWeek.toString().substring(0, 3)}, ${it.date.month.name} ${it.date.dayOfMonth} ${ it.date.time}\n${it.description}" }
+         return "## Upcoming Deadlines:\n" +
+                 deadlines.joinToString("\n----------\n") {
+                     val monthName = it.date.month.name
+                     val month = monthName.substring(0, 1) + monthName.substring(1).lowercase()
+
+                     val dayOfWeekName = it.date.dayOfWeek.toString()
+                     val dayOfWeek = dayOfWeekName.substring(0, 1) + dayOfWeekName.substring(1).lowercase()
+                     "**${it.name}** - ${dayOfWeek.substring(0, 3)}, $month ${it.date.dayOfMonth} ${it.date.time}\n" +
+                             it.description
+                 }
     }
 
 
