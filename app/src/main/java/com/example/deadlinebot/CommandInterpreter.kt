@@ -16,11 +16,11 @@ object CommandInterpreter {
     fun interpretCommand(command: String, args: List<String>, deadlines: MutableList<Deadline>): String {
         return when (command) {
             "add" -> addDeadline(args, deadlines)
-            "remove" -> "I'm here to remove!"
+            "remove" -> removeDeadline(args, deadlines)
             "deadlines" -> deadlines(deadlines)
-            "settings" -> "I'm here to change settings!"
+            "settings" -> settings(args)
             "help" -> help(args)
-            else -> "I don't know that command."
+            else -> "I don't know that command. Say !help for a list of available commands."
         }
     }
 
@@ -67,9 +67,35 @@ object CommandInterpreter {
             "**Error**: Invalid date. The required format is: YYYY-MM-DD HH:mm"
         } catch (e: Exception) {
             println(e)
-            "**Error**: Something went wrong. Example usage <name>, <description>, <date and time>:\n" +
+            "**Error**: Something went wrong. Example usage: !add <name>, <description>, <date and time>:\n" +
                     "_!add Quiz #1, This is my test quiz, 2023/10/11 16:30_"
         }
+    }
+
+    /**
+     * Handles the remove command. Removes a deadline from the list of deadlines.
+     *
+     * @param args The arguments to the remove command.
+     * @return The response to the remove command.
+     */
+    private fun removeDeadline(args: List<String>, deadlines: MutableList<Deadline>): String {
+        return try {
+            val fullName = args.joinToString(separator = " ") { it }
+            val deadline = deadlines.find { it.name == fullName }
+            deadlines.remove(deadline)
+            "Removed **${fullName}**!"
+        } catch (e: IndexOutOfBoundsException) {
+            println(e)
+            "**Error**: Invalid arguments."
+        } catch (e: Exception) {
+            println(e)
+            "**Error**: Something went wrong. Example usage: !remove <name>:\n" +
+                    "_!remove Quiz #1_"
+        }
+    }
+
+    private fun settings(args: List<String>): String {
+        return "I'm here to change settings!"
     }
 
     /**
