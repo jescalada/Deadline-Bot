@@ -1,6 +1,7 @@
 package com.example.deadlinebot
 
 import kotlinx.datetime.LocalDateTime
+import java.time.format.DateTimeParseException
 
 /**
  * Singleton for interpreting commands.
@@ -23,6 +24,12 @@ object CommandInterpreter {
         }
     }
 
+    /**
+     * Handles the deadlines command. Returns a list of all deadlines.
+     *
+     * @return The response to the deadlines command.
+     * @param deadlines The list of deadlines.
+     */
     private fun deadlines(deadlines: MutableList<Deadline>): String {
          return "## Upcoming Deadlines:\n" +
                  deadlines.joinToString("\n----------\n") {
@@ -36,13 +43,32 @@ object CommandInterpreter {
                  }
     }
 
-
+    /**
+     * Handles the add command. Adds a deadline to the list of deadlines.
+     *
+     * @param args The arguments to the add command.
+     * @return The response to the add command.
+     */
     private fun addDeadline(args: List<String>, deadlines: MutableList<Deadline>): String {
         return try {
-            deadlines.add(Deadline(args[0], args[1], LocalDateTime.parse(args[2])))
-            "Deadline ${args[0]} added!"
+            val joined = args.joinToString(separator = " ") { it }
+            val deadlineValues = joined.split(", ")
+
+            // todo: convert to UTC
+            val dateFormatted = deadlineValues[2].replace(" ", "T").replace("/", "-")
+
+            deadlines.add(Deadline(deadlineValues[0], deadlineValues[1], LocalDateTime.parse(dateFormatted)))
+            "Added **${args[0]}**!"
+        } catch (e: IndexOutOfBoundsException) {
+            println(e)
+            "**Error**: Invalid arguments."
+        } catch (e: DateTimeParseException) {
+            println(e)
+            "**Error**: Invalid date. The required format is: YYYY-MM-DD HH:mm"
         } catch (e: Exception) {
-            "Invalid arguments."
+            println(e)
+            "**Error**: Something went wrong. Example usage <name>, <description>, <date and time>:\n" +
+                    "_!add Quiz #1, This is my test quiz, 2023/10/11 16:30_"
         }
     }
 
