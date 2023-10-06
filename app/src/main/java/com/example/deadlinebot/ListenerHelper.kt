@@ -11,7 +11,7 @@ object ListenerHelper {
      *
      * @param kord The Kord instance that is ready to start receiving events.
      */
-    fun onMessageCreateEvent(kord: Kord): Unit {
+    fun onMessageCreateEvent(kord: Kord, deadlines: MutableList<Deadline>) {
         kord.on<MessageCreateEvent> { // runs every time a message is created that our bot can read
 
             // ignore other bots, even ourselves. We only serve humans here!
@@ -20,24 +20,22 @@ object ListenerHelper {
             // check if our command is being invoked
             if (message.content[0] != '!') return@on
 
-            // get the command
-            val command = message.content.substring(1)
+            // get the command (first word after the !)
+            val split = message.content.split(" ")
+            val command = split[0].substring(1)
+            val args = split.drop(1)
 
             // interpret the command
-            val response = interpretCommand(command)
+            val response = CommandInterpreter.interpretCommand(command, args, deadlines)
 
             // all clear, give them the pong!
             message.channel.createMessage(response)
         }
     }
 
-    private fun interpretCommand(command: String): String {
-        return when (command) {
-            "ping" -> "pong!"
-            "help" -> "I'm here to help!"
-            else -> "I don't know that command."
-        }
-    }
+
+
+
 
 
 }
