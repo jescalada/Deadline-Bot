@@ -13,12 +13,12 @@ object CommandInterpreter {
      * @param command The command to interpret.
      * @return The response to the command.
      */
-    fun interpretCommand(command: String, args: List<String>, deadlines: MutableList<Deadline>): String {
+    fun interpretCommand(command: String, args: List<String>, status: Status): String {
         return when (command) {
-            "add" -> addDeadline(args, deadlines)
-            "remove" -> removeDeadline(args, deadlines)
-            "deadlines" -> deadlines(deadlines)
-            "settings" -> settings(args)
+            "add" -> addDeadline(args, status.deadlines)
+            "remove" -> removeDeadline(args, status.deadlines)
+            "deadlines" -> deadlines(status.deadlines)
+            "settings" -> settings(args, status.settings)
             "help" -> help(args)
             else -> "I don't know that command. Say !help for a list of available commands."
         }

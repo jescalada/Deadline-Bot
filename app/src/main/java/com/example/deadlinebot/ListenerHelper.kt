@@ -11,7 +11,7 @@ object ListenerHelper {
      *
      * @param kord The Kord instance that is ready to start receiving events.
      */
-    fun onMessageCreateEvent(kord: Kord, deadlines: MutableList<Deadline>) {
+    fun onMessageCreateEvent(kord: Kord, status: Status) {
         kord.on<MessageCreateEvent> { // runs every time a message is created that our bot can read
 
             // ignore other bots, even ourselves. We only serve humans here!
@@ -26,7 +26,7 @@ object ListenerHelper {
             val args = split.drop(1)
 
             // interpret the command
-            val response = CommandInterpreter.interpretCommand(command, args, deadlines)
+            val response = CommandInterpreter.interpretCommand(command, args, status)
 
             // all clear, give them the pong!
             message.channel.createMessage(response)
