@@ -94,8 +94,41 @@ object CommandInterpreter {
         }
     }
 
-    private fun settings(args: List<String>): String {
-        return "I'm here to change settings!"
+    /**
+     * Handles the settings command. Allows viewing and changing settings.
+     *
+     * @param args The arguments to the settings command.
+     * @return The response to the settings command.
+     */
+    private fun settings(args: List<String>, settings: MutableMap<String, String>): String {
+        return try {
+            if (args.isEmpty()) {
+                // Return all key value setting pairs
+                return settings.map { "${it.key}: ${it.value}" }.joinToString("\n")
+            }
+            when (args[0]) {
+                "interval" -> {
+                    if (args.size <= 1) {
+                        return "Current reminder interval: ${settings["interval"]} hours before."
+                    }
+                    val joined = args.drop(1).joinToString(separator = " ") { it }
+                    val intervals = joined.split(",").map { it.trim().toInt() }
+
+                    val intervalsParsed = intervals.toString()
+
+                    settings["interval"] = intervalsParsed
+                    "Reminder interval set to $intervalsParsed."
+                }
+                else -> "I don't know that setting."
+            }
+        } catch (e: IndexOutOfBoundsException) {
+            println(e)
+            "**Error**: Invalid arguments."
+        } catch (e: Exception) {
+            println(e)
+            "**Error**: Something went wrong. Example usage: !settings <setting> <value>:\n" +
+                    "_!settings interval 72, 24_"
+        }
     }
 
     /**
