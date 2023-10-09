@@ -104,7 +104,7 @@ object CommandInterpreter {
         return try {
             if (args.isEmpty()) {
                 // Return all key value setting pairs
-                return settings.map { "${it.key}: ${it.value}" }.joinToString("\n")
+                return "## Settings" + settings.map { "\n${it.key}: ${it.value}" }.joinToString("")
             }
             when (args[0]) {
                 "interval" -> {
@@ -114,7 +114,7 @@ object CommandInterpreter {
                     val joined = args.drop(1).joinToString(separator = " ") { it }
                     val intervals = joined.split(",").map { it.trim().toInt() }
 
-                    val intervalsParsed = intervals.toString()
+                    val intervalsParsed = intervals.toString().replace("[", "").replace("]", "")
 
                     settings["interval"] = intervalsParsed
                     "Reminder interval set to $intervalsParsed."
