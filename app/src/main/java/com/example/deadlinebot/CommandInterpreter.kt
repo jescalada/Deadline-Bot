@@ -109,7 +109,7 @@ object CommandInterpreter {
             when (args[0]) {
                 "interval" -> {
                     if (args.size <= 1) {
-                        return "Current reminder interval: ${settings["interval"]} hours before."
+                        return "Current reminder interval: **${settings["interval"]}** hours before."
                     }
                     val joined = args.drop(1).joinToString(separator = " ") { it }
                     val intervals = joined.split(",").map { it.trim().toInt() }
@@ -117,7 +117,17 @@ object CommandInterpreter {
                     val intervalsParsed = intervals.toString().replace("[", "").replace("]", "")
 
                     settings["interval"] = intervalsParsed
-                    "Reminder interval set to $intervalsParsed."
+                    "**Reminder interval** was set to **$intervalsParsed**."
+                }
+                "autoremind" -> {
+                    if (args.size <= 1) {
+                        return "Current autoremind setting: **${settings["autoremind"]}**."
+                    }
+                    val joined = args.drop(1).joinToString(separator = " ") { it }
+                    val autoremind = joined.toBoolean()
+
+                    settings["autoremind"] = autoremind.toString()
+                    "**Autoremind** was set to **$autoremind**."
                 }
                 else -> "I don't know that setting."
             }

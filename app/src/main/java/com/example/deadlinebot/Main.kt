@@ -19,8 +19,8 @@ suspend fun main() {
 
     val deadlines = DataHelper.loadDeadlinesFromFile("app/assets/deadlines.txt")
     val settings = mutableMapOf(
-        "interval" to "[72, 24]",
-        "autoremind" to "true"
+        "autoremind" to "true",
+        "interval" to "[72, 24]"
     )
 
     val status = Status(deadlines, true, settings)
