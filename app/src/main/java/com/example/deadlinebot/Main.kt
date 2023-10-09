@@ -18,11 +18,17 @@ suspend fun main() {
     }
 
     val deadlines = DataHelper.loadDeadlinesFromFile("app/assets/deadlines.txt")
+    val settings = mutableMapOf(
+        "interval" to "72, 24",
+        "autoremind" to "true"
+    )
 
-    // Register event listeners
-    ListenerHelper.onMessageCreateEvent(kord, deadlines)
+    val status = Status(deadlines, true, settings)
 
-    // Start bot (log it in)
+    // Register message listener and pass in the bot's status
+    ListenerHelper.onMessageCreateEvent(kord, status)
+
+    // Log bot into Discord
     kord.login {
         // we need to specify this to receive the content of messages
         @OptIn(PrivilegedIntent::class)
